@@ -6,6 +6,7 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import PostList from './pages/PostList'
 import About from './pages/About'
+import ProductPage from './pages/ProductPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +18,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/chi-siamo' element={<About />} />
         <Route path='/posts' element={<PostList />} />
+        <Route path='/posts/:slug' element={<ProductPage />} />
       </Routes>
     </>
   )
