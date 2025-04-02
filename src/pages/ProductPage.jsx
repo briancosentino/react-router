@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 
 const ProductPage = () => {
     const { slug } = useParams()
+    const navigate = useNavigate()
     const url = 'http://localhost:3001/postsList'
-
+    const [postList, setPostList] = useState([])
 
     const [post, setPost] = useState({})
     function fetchData(url) {
@@ -13,6 +14,7 @@ const ProductPage = () => {
             .then(data => {
                 const thisPost = data.find(product => product.slug === slug)
                 setPost(thisPost);
+                setPostList(data)
 
             })
     }
@@ -20,12 +22,39 @@ const ProductPage = () => {
 
     useEffect(() => {
         fetchData(url)
-    }, [])
+    }, [slug])
+    const postIdx = postList.findIndex(post => post.slug === slug)
+    const [back, setBack] = useState(true)
+    const [forward, setForward] = useState(true)
+    /*  if (postList[postIdx + 1] === 0) {
+         setForward(false)
+     } */
+
+
+
+    const handleClickBack = () => {
+        navigate(`/posts/${postList[postIdx - 1].slug}`)
+    }
+
+    const handleClickForward = () => {
+
+        navigate(`/posts/${postList[postIdx + 1].slug}`)
+    }
     console.log(post);
 
     return (
         <div className="flex mt-16">
-            <div className="w-1/2 px-4"><img src={post.image} alt="" /></div>
+            <div className="w-1/2 flex flex-wrap gap-4 px-4">
+                <img className="w-full" src={post.image} alt="" />
+                {postIdx > 0 ? <div onClick={handleClickBack} className="  mt-16 border border-stone-300 rounded-lg p-3">
+                    Go Back
+                </div> : ''}
+                {postIdx < postList.length - 1 ? <div onClick={handleClickForward} className="  mt-16 border border-stone-300 rounded-lg p-3">
+                    Go Forward
+                </div> : ''}
+
+            </div>
+
             <div className="w-1/2 px-4">
                 <h1 className="font-semibold text-3xl">{post.title}</h1>
                 <div className="flex mt-6 gap-3">
